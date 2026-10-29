@@ -1,0 +1,187 @@
+-- CMC / MCM Remembers Last Tab compatibility: category-aware persistence.
+VERSION = "1.7-cmc"
+local installed = false
+local SECTION = "cmc_last_tab_compat"
+
+local function enabled(id)
+	return ui_mcm.get("last_tab/" .. id) ~= false
+end
+
+local function tree(self)
+	return self.tree and self.tree[1] and self.tree[1][""]
+end
+
+local function snapshot(self)
+	local sv = tree(self)
+	return {
+		path = self.cmc_category_selector and self.last_path or "",
+		category = self.active_category or "",
+		option_scroll = self.scroll_opt and math.floor(self.scroll_opt:GetCurrentScrollPos() or 0) or 0,
+		-- Search results are a different list; do not replay their offset.
+		scroll = not self.search_filter and sv and math.floor(sv:GetCurrentScrollPos() or 0) or 0,
+	}
+end
+
+local function save(state)
+	local cfg = axr_main and axr_main.config
+	if not cfg or not state then return end
+	state.path = state.path or ""
+	if cfg:r_value(SECTION, "valid", 1, false)
+		and cfg:r_value(SECTION, "path", 0, "") == state.path
+		and cfg:r_value(SECTION, "category", 0, "") == state.category
+		and cfg:r_value(SECTION, "option_scroll", 2, 0) == state.option_scroll
+		and cfg:r_value(SECTION, "scroll", 2, 0) == state.scroll then return end
+	-- Write the marker last, so an incomplete record is never considered valid.
+	cfg:w_value(SECTION, "path", state.path)
+	cfg:w_value(SECTION, "category", state.category)
+	cfg:w_value(SECTION, "scroll", state.scroll)
+	cfg:w_value(SECTION, "option_scroll", state.option_scroll or 0)
+	cfg:w_value(SECTION, "valid", true)
+	cfg:save()
+end
+
+local function read()
+	local cfg = axr_main and axr_main.config
+	if not cfg then return end
+	if cfg:r_value(SECTION, "valid", 1, false) then
+		return {path = cfg:r_value(SECTION, "path", 0, ""),
+			category = cfg:r_value(SECTION, "category", 0, ""),
+			option_scroll = cfg:r_value(SECTION, "option_scroll", 2, 0) or 0,
+			scroll = cfg:r_value(SECTION, "scroll", 2, 0) or 0}
+	end
+	-- Import the legacy page, but its scroll offset has no list identity.
+	local path = cfg:r_value("mcm_last_tab", "path", 0, "")
+	if path and path ~= "" then return {path = path, category = "", scroll = 0} end
+end
+
+local function set_scroll(sv, position)
+	if not sv then return end
+	sv:SetScrollPos(1)
+	local low, high = sv:GetMinScrollPos() or 0, sv:GetMaxScrollPos() or 0
+	sv:SetScrollPos(math.max(low, math.min(high, position or 0)))
+end
+
+local function restore_scroll(self, state)
+	if not enabled("scroll") then return end
+	if state.path ~= "" and self.last_path ~= state.path then return end
+	-- The settings pane belongs to the page, independently of which category
+	-- or search results were used to reach it.
+	if state.path ~= "" then set_scroll(self.scroll_opt, state.option_scroll) end
+	if not self.search_filter and (self.active_category or "") == state.category then
+		set_scroll(tree(self), state.scroll)
+	end
+end
+
+local function reopen_page(self, state)
+	-- Open_to normally derives the browsing category from the selected mod.
+	-- Preserve the saved list only if it still contains that mod (a category
+	-- assignment may have changed since saving).
+	local root_id = state.path:match("^[^/]+")
+	if state.category and state.category ~= "" then
+		for _, group in ipairs(elseform_cmc.filtered_menu(ui_mcm.options, state.category)) do
+			if group.id == root_id then
+				self.cmc_compat_open_category = state.category
+				break
+			end
+		end
+	end
+	self:Open_to(state.path)
+	self.cmc_compat_open_category = nil
+end
+
+function on_mcm_load()
+	if not installed then
+		installed = true
+		local cls = ui_mcm.UI_MCM
+		local reset, cancel, accept, callback = cls.Reset_last_opt, cls.On_Cancel, cls.On_Accept, cls.Callback_Tree
+		local update = cls.Update
+		local register_tree = cls.Register_Tree
+		cls.Register_Tree = function(self, tr, path, ...)
+			if tr == 1 and path == "" and self.cmc_compat_open_category then
+				self.active_category = self.cmc_compat_open_category
+				self.cmc_compat_open_category = nil
+			end
+			return register_tree(self, tr, path, ...)
+		end
+		cls.Update = function(self)
+			local state = self.cmc_compat_reopen_after_apply
+			if state then
+				self.cmc_compat_reopen_after_apply = nil
+				-- Replace CMC's queued return to the overview with reopening the
+				-- applied page, after the native Apply callback has unwound.
+				self.cmc_root_refresh_pending = false
+				self.cmc_clear_search_on_refresh = false
+				reopen_page(self, state)
+				self:UpdatePending()
+				restore_scroll(self, state)
+			end
+			local result = update(self)
+			local pending = self.cmc_compat_pending_scroll
+			if pending then
+				pending.frames = pending.frames - 1
+				if pending.frames <= 0 then
+					self.cmc_compat_pending_scroll = nil
+					restore_scroll(self, pending.state)
+				end
+			end
+			return result
+		end
+		cls.Reset_last_opt = function(self)
+			-- Main menu can reuse the same dialog. Restore on EVERY opening;
+			-- the base Reset_last_opt rebuilds the page and resets its scroll.
+			if not enabled("enable") then return reset(self) end
+			local state = read()
+			if not state then return reset(self) end
+			Register_UI("UI_MCM")
+			if state.path ~= "" then
+				-- Preserve All Mods or the saved category when still applicable.
+				self.last_path = nil
+				reopen_page(self, state)
+			else
+				self.last_path = nil
+				local category = nil
+				for _, entry in ipairs(elseform_cmc.category_menu(ui_mcm.options)) do
+					if entry._elseform_cmc_virtual_category == state.category then
+						category = state.category
+						break
+					end
+				end
+				self.active_category = category
+				self.search_filter = nil
+				self:Register_Tree(1, "", ui_mcm.options, 1)
+			end
+			self:UpdatePending()
+			-- ShowDialog/native layout can reset scroll after Reset_last_opt.
+			self.cmc_compat_pending_scroll = {state = state, frames = 2}
+		end
+		cls.Callback_Tree = function(self, ...)
+			self.cmc_compat_applied = nil
+			self.cmc_compat_pending_scroll = nil
+			return callback(self, ...)
+		end
+		cls.On_Accept = function(self)
+			local state = snapshot(self)
+			if enabled("enable") then save(state) end
+			local result = accept(self)
+			if not self.last_path then
+				self.cmc_compat_applied = state
+				if state.path and state.path ~= "" and not self.Need_Restart and not self.Need_VidRestart then
+					self.cmc_compat_reopen_after_apply = state
+				end
+			end
+			return result
+		end
+		cls.On_Cancel = function(self)
+			local pending = self.cmc_compat_pending_scroll
+			if enabled("enable") then save(self.cmc_compat_applied or (pending and pending.state) or snapshot(self)) end
+			self.cmc_compat_pending_scroll = nil
+			return cancel(self)
+		end
+	end
+	return {id = "last_tab", sh = true, gr = {
+		{id = "title", type = "slide", link = "ui_options_slider_player", text = "ui_mcm_last_tab_title", size = {512, 50}, spacing = 20},
+		{id = "desc", type = "desc", text = "ui_mcm_last_tab_desc", clr = {255, 190, 190, 190}},
+		{id = "enable", type = "check", val = 1, def = true},
+		{id = "scroll", type = "check", val = 1, def = true},
+	}}
+end

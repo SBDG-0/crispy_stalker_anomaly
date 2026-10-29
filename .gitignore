@@ -1,0 +1,8 @@
+# Ignore everything at the repository root by default.
+/*
+
+# Keep this configuration tracked.
+!/.gitignore
+
+# Track top-level crispy_ folders and everything inside them.
+!/crispy_*/

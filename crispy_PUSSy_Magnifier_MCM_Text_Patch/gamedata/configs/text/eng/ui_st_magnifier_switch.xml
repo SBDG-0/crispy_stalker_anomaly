@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<string_table>
+	<string id="ui_mcm_menu_magnifier_switch">
+		<text>Magnifier Switching</text>
+	</string>
+	<string id="ui_mcm_magnifier_switch_use_mousewheel">
+		<text>Switch using mouse wheel</text>
+	</string>
+	<string id="ui_mcm_magnifier_switch_use_mousewheel_desc">
+		<text>Use the mouse wheel to switch the magnifier instead of the configured key binding.</text>
+	</string>
+	<string id="ui_mcm_magnifier_switch_mwheel_switch_ads_only">
+		<text>Mouse wheel switching only while aiming</text>
+	</string>
+	<string id="ui_mcm_magnifier_switch_mwheel_switch_ads_only_desc">
+		<text>Allow mouse wheel magnifier switching only while aiming down sights.</text>
+	</string>
+	<string id="ui_mcm_magnifier_switch_mwheel_weapon_swap">
+		<text>Mouse wheel weapon switching</text>
+	</string>
+	<string id="ui_mcm_magnifier_switch_mwheel_weapon_swap_desc">
+		<text>Allow the mouse wheel to change weapons. Controls the mouse_wheel_change_weapon setting.</text>
+	</string>
+	<string id="ui_mcm_magnifier_switch_switch_bind">
+		<text>Switch magnifier</text>
+	</string>
+	<string id="ui_mcm_magnifier_switch_switch_bind_desc">
+		<text>Key used to switch the magnifier when mouse wheel switching is disabled.</text>
+	</string>
+	<string id="ui_mcm_magnifier_switch_modifier">
+		<text>Key modifier</text>
+	</string>
+	<string id="ui_mcm_magnifier_switch_modifier_desc">
+		<text>Modifier key required together with the magnifier switch key.</text>
+	</string>
+	<string id="ui_mcm_magnifier_switch_press_type">
+		<text>Key press mode</text>
+	</string>
+	<string id="ui_mcm_magnifier_switch_press_type_desc">
+		<text>Choose whether the magnifier switch key uses a single press, double tap, or hold.</text>
+	</string>
+	<string id="ui_mcm_magnifier_switch_keep_aim_toggle">
+		<text>Keep aiming after switching</text>
+	</string>
+	<string id="ui_mcm_magnifier_switch_keep_aim_toggle_desc">
+		<text>Preserve aiming when switching the magnifier while toggle aiming is enabled.</text>
+	</string>
+	<string id="ui_mcm_magnifier_switch_switch_sound">
+		<text>Play magnifier switch sound</text>
+	</string>
+	<string id="ui_mcm_magnifier_switch_switch_sound_desc">
+		<text>Play the magnifier flip sound when switching.</text>
+	</string>
+	<string id="ui_mcm_magnifier_switch_debug">
+		<text>Debug logging</text>
+	</string>
+	<string id="ui_mcm_magnifier_switch_debug_desc">
+		<text>Write magnifier switching diagnostic messages to the game log.</text>
+	</string>
+</string_table>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<string_table>
+	<string id="ui_mcm_menu_crispy_bf_position">
+		<text>Назад и вперёд - Положение кнопок</text>
+	</string>
+	<string id="ui_mcm_crispy_bf_position_description">
+		<text>Смещения X/Y двигают элементы вместе. Отрицательное: влево/вверх. Положительное: вправо/вниз. Ноль: исходное положение. Нажмите «Применить». Движение ограничено границами окна. Диапазоны задаются в начале скрипта патча.</text>
+	</string>
+	<string id="ui_mcm_crispy_bf_position_x_offset">
+		<text>Смещение по горизонтали</text>
+	</string>
+	<string id="ui_mcm_crispy_bf_position_x_offset_desc">
+		<text>Отрицательное значение сдвигает влево, положительное - вправо. Ноль возвращает исходное положение. Движение ограничено границами окна.</text>
+	</string>
+	<string id="ui_mcm_crispy_bf_position_y_offset">
+		<text>Смещение по вертикали</text>
+	</string>
+	<string id="ui_mcm_crispy_bf_position_y_offset_desc">
+		<text>Отрицательное значение сдвигает вверх, положительное - вниз. Ноль возвращает исходное положение. Движение ограничено границами окна.</text>
+	</string>
+</string_table>

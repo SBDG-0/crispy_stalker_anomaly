@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<string_table>
+	<string id="ui_mcm_menu_crispy_cmc_dropdown_position">
+		<text>CMC - Положение списка</text>
+	</string>
+	<string id="ui_mcm_crispy_cmc_dropdown_position_description">
+		<text>Смещения X/Y двигают элементы вместе. Отрицательное: влево/вверх. Положительное: вправо/вниз. Ноль: исходное положение. Нажмите «Применить». Движение ограничено границами окна. Диапазоны задаются в начале скрипта патча.</text>
+	</string>
+	<string id="ui_mcm_crispy_cmc_dropdown_position_shift_left">
+		<text>Смещение списка влево</text>
+	</string>
+	<string id="ui_mcm_crispy_cmc_dropdown_position_shift_left_desc">
+		<text>Диапазон: 0-200 единиц интерфейса. По умолчанию: 72. Ноль возвращает исходное положение. Область подписи уменьшается, чтобы не перекрывать список.</text>
+	</string>
+	<string id="ui_mcm_crispy_cmc_dropdown_position_y_offset">
+		<text>Смещение по вертикали</text>
+	</string>
+	<string id="ui_mcm_crispy_cmc_dropdown_position_y_offset_desc">
+		<text>Отрицательное значение сдвигает вверх, положительное - вниз. Ноль возвращает исходное положение. Движение ограничено границами окна.</text>
+	</string>
+	<string id="ui_mcm_crispy_cmc_dropdown_position_x_offset">
+		<text>Смещение по горизонтали</text>
+	</string>
+	<string id="ui_mcm_crispy_cmc_dropdown_position_x_offset_desc">
+		<text>Отрицательное значение сдвигает влево, положительное - вправо. Ноль возвращает исходное положение. Движение ограничено границами окна.</text>
+	</string>
+</string_table>

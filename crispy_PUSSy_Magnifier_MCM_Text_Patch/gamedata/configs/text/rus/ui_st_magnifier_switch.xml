@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<string_table>
+	<string id="ui_mcm_menu_magnifier_switch">
+		<text>Переключение магнифера</text>
+	</string>
+	<string id="ui_mcm_magnifier_switch_use_mousewheel">
+		<text>Переключать колёсиком мыши</text>
+	</string>
+	<string id="ui_mcm_magnifier_switch_use_mousewheel_desc">
+		<text>Использовать колёсико мыши для переключения магнифера вместо назначенной клавиши.</text>
+	</string>
+	<string id="ui_mcm_magnifier_switch_mwheel_switch_ads_only">
+		<text>Колёсико: только при прицеливании</text>
+	</string>
+	<string id="ui_mcm_magnifier_switch_mwheel_switch_ads_only_desc">
+		<text>Разрешить переключение магнифера колёсиком мыши только во время прицеливания.</text>
+	</string>
+	<string id="ui_mcm_magnifier_switch_mwheel_weapon_swap">
+		<text>Смена оружия колёсиком мыши</text>
+	</string>
+	<string id="ui_mcm_magnifier_switch_mwheel_weapon_swap_desc">
+		<text>Разрешить смену оружия колёсиком мыши. Управляет настройкой mouse_wheel_change_weapon.</text>
+	</string>
+	<string id="ui_mcm_magnifier_switch_switch_bind">
+		<text>Переключить магнифер</text>
+	</string>
+	<string id="ui_mcm_magnifier_switch_switch_bind_desc">
+		<text>Клавиша переключения магнифера, когда переключение колёсиком мыши отключено.</text>
+	</string>
+	<string id="ui_mcm_magnifier_switch_modifier">
+		<text>Клавиша-модификатор</text>
+	</string>
+	<string id="ui_mcm_magnifier_switch_modifier_desc">
+		<text>Клавиша-модификатор, которую нужно удерживать вместе с клавишей переключения магнифера.</text>
+	</string>
+	<string id="ui_mcm_magnifier_switch_press_type">
+		<text>Режим нажатия</text>
+	</string>
+	<string id="ui_mcm_magnifier_switch_press_type_desc">
+		<text>Выберите одиночное нажатие, двойное нажатие или удержание клавиши переключения магнифера.</text>
+	</string>
+	<string id="ui_mcm_magnifier_switch_keep_aim_toggle">
+		<text>Сохранять прицеливание</text>
+	</string>
+	<string id="ui_mcm_magnifier_switch_keep_aim_toggle_desc">
+		<text>Сохранять прицеливание после переключения магнифера, если включён режим прицеливания по нажатию.</text>
+	</string>
+	<string id="ui_mcm_magnifier_switch_switch_sound">
+		<text>Звук переключения магнифера</text>
+	</string>
+	<string id="ui_mcm_magnifier_switch_switch_sound_desc">
+		<text>Воспроизводить звук откидывания магнифера при переключении.</text>
+	</string>
+	<string id="ui_mcm_magnifier_switch_debug">
+		<text>Отладочные сообщения</text>
+	</string>
+	<string id="ui_mcm_magnifier_switch_debug_desc">
+		<text>Записывать диагностические сообщения о переключении магнифера в журнал игры.</text>
+	</string>
+</string_table>

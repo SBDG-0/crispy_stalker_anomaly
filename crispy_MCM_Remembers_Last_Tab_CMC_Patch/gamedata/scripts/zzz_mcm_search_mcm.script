@@ -1,0 +1,94 @@
+-- CMC / MCM Remembers Last Tab compatibility: deferred live search.
+VERSION = "1.1-cmc"
+local installed = false
+local DELAY = 250
+
+local function placeholder()
+	return game.translate_string("ui_mcm_menu_search")
+end
+
+local function normalize(text)
+	text = text or ""
+	local ph = placeholder()
+	if ph ~= "" then
+		local a, b = text:find(ph, 1, true)
+		while a do
+			text = text:sub(1, a - 1) .. text:sub(b + 1)
+			a, b = text:find(ph, 1, true)
+		end
+	end
+	text = text:match("^%s*(.-)%s*$")
+	return text ~= "" and text or nil
+end
+
+local function set_text(self, text)
+	local suppressed = self.cmc_suppress_search_callback
+	self.cmc_suppress_search_callback = true
+	self.mod_search:SetText(text)
+	self.cmc_suppress_search_callback = suppressed
+	self.mcmsf_text = text
+	self.mcmsf_pending = false
+end
+
+local function filter(self, value)
+	if self.search_filter ~= value then
+		self.search_filter = value
+		self.cmc_root_refresh_pending = true
+	end
+end
+
+function on_mcm_load()
+	if installed then return end
+	installed = true
+	local cls = ui_mcm.UI_MCM
+	local update, keyboard = cls.Update, cls.OnKeyboard
+	cls.OnSearch = function(self)
+		if self.cmc_suppress_search_callback then return end
+		local value = normalize(self.mod_search:GetText())
+		set_text(self, value or placeholder())
+		filter(self, value)
+	end
+	cls.Update = function(self)
+		-- Let CMC finish any queued rebuild before observing programmatic text.
+		local rebuilding = self.cmc_root_refresh_pending
+		update(self)
+		local box = self.mod_search
+		if not box then return end
+		local text = box:GetText() or ""
+		if rebuilding or self.cmc_suppress_search_callback then
+			self.mcmsf_text = text
+			self.mcmsf_pending = false
+			return
+		end
+		if text ~= self.mcmsf_text then
+			local value = normalize(text)
+			if value and value ~= text then
+				set_text(self, value)
+				text = value
+			end
+			self.mcmsf_text = text
+			self.mcmsf_pending = true
+			self.mcmsf_time = time_continual()
+		elseif self.mcmsf_pending and time_continual() - self.mcmsf_time >= DELAY then
+			self.mcmsf_pending = false
+			filter(self, normalize(text))
+		end
+	end
+	cls.OnKeyboard = function(self, dik, action)
+		local box = self.mod_search
+		if box and box:IsCursorOverWindow() then
+			if dik == DIK_keys.MOUSE_1 and action == ui_events.WINDOW_KEY_PRESSED
+				and box:GetText() == placeholder() then
+				set_text(self, "")
+			elseif dik == DIK_keys.MOUSE_2 then
+				if action == ui_events.WINDOW_KEY_PRESSED then
+					set_text(self, "")
+					filter(self, nil)
+					box:CaptureFocus(true)
+				end
+				return true
+			end
+		end
+		return keyboard(self, dik, action)
+	end
+end

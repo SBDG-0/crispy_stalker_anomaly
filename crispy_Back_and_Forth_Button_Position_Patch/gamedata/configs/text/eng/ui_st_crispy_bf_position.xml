@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<string_table>
+	<string id="ui_mcm_menu_crispy_bf_position">
+		<text>Back and Forth - Button Position</text>
+	</string>
+	<string id="ui_mcm_crispy_bf_position_description">
+		<text>Signed X/Y offsets move the controls as a group. Negative: left/up. Positive: right/down. Zero: native position. Press Apply. Movement stops at the window frame edge; slider ranges can be edited at the top of the patch script.</text>
+	</string>
+	<string id="ui_mcm_crispy_bf_position_x_offset">
+		<text>Horizontal offset</text>
+	</string>
+	<string id="ui_mcm_crispy_bf_position_x_offset_desc">
+		<text>Negative moves left; positive moves right. Zero restores the native position. Stops at the window frame edge.</text>
+	</string>
+	<string id="ui_mcm_crispy_bf_position_y_offset">
+		<text>Vertical offset</text>
+	</string>
+	<string id="ui_mcm_crispy_bf_position_y_offset_desc">
+		<text>Negative moves up; positive moves down. Zero restores the native position. Stops at the window frame edge.</text>
+	</string>
+</string_table>

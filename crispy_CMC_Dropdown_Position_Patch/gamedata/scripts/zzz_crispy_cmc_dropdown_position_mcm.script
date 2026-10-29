@@ -1,0 +1,89 @@
+-- CMC: signed X/Y positioning without replacing ui_mcm.script.
+VERSION = "1.3"
+local installed = false
+-- Editable slider ranges (UI coordinates, not physical monitor pixels).
+local X_MIN, X_MAX = -1024, 1024
+local Y_MIN, Y_MAX = -768, 768
+local EDGE_MARGIN = 4
+
+local function capture(controls)
+    local state = {controls = controls, positions = {}}
+    for i, control in ipairs(controls) do
+        local p = control:GetWndPos()
+        state.positions[i] = {x = p.x, y = p.y}
+    end
+    return state
+end
+
+local function move(self, state, x, y)
+    if #state.controls == 0 then return end
+    local left, top, right, bottom = math.huge, math.huge, -math.huge, -math.huge
+    for i, control in ipairs(state.controls) do
+        local p = state.positions[i]
+        left, top = math.min(left, p.x), math.min(top, p.y)
+        right = math.max(right, p.x + control:GetWidth())
+        bottom = math.max(bottom, p.y + control:GetHeight())
+    end
+    -- Controls are children of dialog; outside that frame they stop receiving
+    -- mouse input even when still visible. Clamp in parent-local coordinates.
+    local xmin = EDGE_MARGIN - left
+    local xmax = self.dialog:GetWidth() - EDGE_MARGIN - right
+    local ymin = EDGE_MARGIN - top
+    local ymax = self.dialog:GetHeight() - EDGE_MARGIN - bottom
+    local dx = math.max(xmin, math.min(xmax, x))
+    local dy = math.max(ymin, math.min(ymax, y))
+    if state.dx == dx and state.dy == dy then return end
+    for i, control in ipairs(state.controls) do
+        local p = state.positions[i]
+        control:SetWndPos(vector2():set(p.x + dx, p.y + dy))
+    end
+    state.dx, state.dy = dx, dy
+end
+
+local function read_offsets(prefix)
+    local x = math.max(X_MIN, math.min(X_MAX, tonumber(ui_mcm.get(prefix .. "/x_offset")) or 0))
+    local y = math.max(Y_MIN, math.min(Y_MAX, tonumber(ui_mcm.get(prefix .. "/y_offset")) or 0))
+    return x, y
+end
+
+function on_mcm_load()
+    if not installed then
+        installed = true
+        local cls = ui_mcm and ui_mcm.UI_MCM
+        if cls and cls.Layout_Header_Controls then
+            local layout, update = cls.Layout_Header_Controls, cls.Update
+            cls.Layout_Header_Controls = function(self, category, preset)
+                local result = layout(self, category, preset)
+                local controls = {}
+                if category then
+                    controls[#controls + 1] = self.cmc_category_cap
+                    controls[#controls + 1] = self.cmc_category
+                end
+                if preset then
+                    controls[#controls + 1] = self.preset_cap
+                    controls[#controls + 1] = self.preset
+                end
+                local state = capture(controls)
+                self.crispy_dropdown_position = state
+                local x, y = read_offsets("crispy_cmc_dropdown_position")
+                move(self, state, x, y)
+                return result
+            end
+            cls.Update = function(self, ...)
+                local result = update(self, ...)
+                local state = self.crispy_dropdown_position
+                if state then
+                    local x, y = read_offsets("crispy_cmc_dropdown_position")
+                    move(self, state, x, y)
+                end
+                return result
+            end
+        end
+    end
+    return {id = "crispy_cmc_dropdown_position", sh = true, gr = {
+        {id = "title", type = "slide", link = "ui_options_slider_player", text = "ui_mcm_menu_crispy_cmc_dropdown_position", size = {512, 50}, spacing = 20},
+        {id = "desc", type = "desc", text = "ui_mcm_crispy_cmc_dropdown_position_description"},
+        {id = "x_offset", type = "track", val = 2, def = 0, min = X_MIN, max = X_MAX, step = 1, prec = 0},
+        {id = "y_offset", type = "track", val = 2, def = 0, min = Y_MIN, max = Y_MAX, step = 1, prec = 0},
+    }}
+end
