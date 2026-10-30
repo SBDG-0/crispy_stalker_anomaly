@@ -33,7 +33,7 @@ Back and Forth Buttons: stop working, this issue is beeing investigated.
 ---
 This software is provided "as is", without warranty of any kind. 
 <br />  It is free to use, modify, and distribute under one condition: 
-<br />  You must credit the author (SavageBulldog) and include a link back to the original repository.
+<br />  Only thing asked of you is to credit the author (SavageBulldog) and include a link back to the original repository.
 ```
 https://github.com/SBDG-0/crispy_stalker_anomaly
 ```
