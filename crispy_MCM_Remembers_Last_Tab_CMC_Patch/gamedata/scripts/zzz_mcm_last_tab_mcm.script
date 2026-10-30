@@ -1,5 +1,5 @@
 -- CMC / MCM Remembers Last Tab compatibility: category-aware persistence.
-VERSION = "1.7-cmc"
+VERSION = "1.8-cmc"
 local installed = false
 local SECTION = "cmc_last_tab_compat"
 
@@ -133,6 +133,9 @@ function on_mcm_load()
 			local state = read()
 			if not state then return reset(self) end
 			Register_UI("UI_MCM")
+			-- Restoring a page walks intermediate tree entries. Back and Forth
+			-- must stay quiet until the final page has been selected.
+			if self.bf_back then self.bf_quiet = true end
 			if state.path ~= "" then
 				-- Preserve All Mods or the saved category when still applicable.
 				self.last_path = nil
@@ -150,6 +153,13 @@ function on_mcm_load()
 				self.search_filter = nil
 				self:Register_Tree(1, "", ui_mcm.options, 1)
 			end
+			-- Preserve the existing Reset_last_opt wrapper chain. In particular,
+			-- Back and Forth releases bf_quiet and records the final MCM page
+			-- here. Skipping it leaves history disabled for the whole dialog.
+			-- Its base Open_to rebuilds the root, so preserve our browsing view.
+			self.cmc_compat_open_category = self.active_category
+			reset(self)
+			self.cmc_compat_open_category = nil
 			self:UpdatePending()
 			-- ShowDialog/native layout can reset scroll after Reset_last_opt.
 			self.cmc_compat_pending_scroll = {state = state, frames = 2}

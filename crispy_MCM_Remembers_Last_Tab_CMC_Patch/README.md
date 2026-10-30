@@ -15,6 +15,9 @@ Enable this mod below both originals in Mod Organizer,
 #### What it does?
 Adds Custom Mod Category compatibility into MCM Remembers Last Tab scripts.
 
+#### Update 1.01
+Fixed incompatibility with Back and Forth Buttons for MCM
+
 #### Changes:
 - Live search respects CMC's search suppression, and queues tree rebuilds through CMC's next-frame refresh.
 - Apply saves the current page and reopens it on the next UI frame, replacing CMC's return to the category overview.
