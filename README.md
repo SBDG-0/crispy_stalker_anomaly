@@ -5,6 +5,13 @@ Maybe some of these are of use for someone else too.
 
 Use [STALKER-Anomaly-modded-exes](https://github.com/themrdemonized/xray-monolith#stalker-anomaly-modded-exes) for best overall compatibility.
 
+### Installation:
+Install the ZIP from [releases](https://github.com/SBDG-0/crispy_stalker_anomaly/releases) as a separate mod in MO2. 
+
+Enable in Mod Organizer.
+
+More detailed instructions and informations can be found in the README of each mods archives.
+
 Summary:
 ---
 ### Stealth + Ghillie Rework Compatibility Patch
@@ -26,7 +33,7 @@ Adjusts the layout on the draggable hud editor layout slightly.
 
 Known issues: 
 ---
-Back and Forth Buttons: stop working, this issue is beeing investigated.
+
 
 <br />
 
