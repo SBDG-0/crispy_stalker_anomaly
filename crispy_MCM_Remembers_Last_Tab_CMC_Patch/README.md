@@ -7,7 +7,7 @@
 
 ### Installation:
 
-Install the ZIP from releases as a separate mod in MO2. 
+Install the ZIP from [releases](https://github.com/SBDG-0/crispy_stalker_anomaly/releases) as a separate mod in MO2. 
 
 Enable this mod below both originals in Mod Organizer,
 <br />It has to have priority over the scripts from turretrider.

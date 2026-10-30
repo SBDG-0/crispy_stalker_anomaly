@@ -13,7 +13,7 @@ The script wraps CMC's existing layout method.
 English/Russian string tables are supplied.
 
 ### Installation:
-Install the ZIP from releases as a separate mod in MO2. 
+Install the ZIP from [releases](https://github.com/SBDG-0/crispy_stalker_anomaly/releases) as a separate mod in MO2. 
 
 Enable alongside CMC in Mod Organizer
 
