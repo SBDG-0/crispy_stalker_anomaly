@@ -10,7 +10,7 @@ Install the ZIP from [releases](https://github.com/SBDG-0/crispy_stalker_anomaly
 
 Enable in Mod Organizer.
 
-More detailed instructions and informations can be found in the README of each mods archives.
+More detailed instructions and information can be found in the README file included with each mod.
 
 Summary:
 ---
